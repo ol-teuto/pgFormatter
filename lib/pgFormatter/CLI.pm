@@ -96,32 +96,33 @@ necessary runs anonymization.
 sub beautify {
     my $self = shift;
     my %args;
-    $args{ 'no_comments' }  = 1 if $self->{ 'cfg' }->{ 'nocomment' };
-    $args{ 'spaces' }       = $self->{ 'cfg' }->{ 'spaces' };
-    $args{ 'uc_keywords' }  = $self->{ 'cfg' }->{ 'keyword-case' };
-    $args{ 'uc_functions' } = $self->{ 'cfg' }->{ 'function-case' };
-    $args{ 'uc_types' }     = $self->{ 'cfg' }->{ 'type-case' };
-    $args{ 'placeholder' }  = $self->{ 'cfg' }->{ 'placeholder' };
-    $args{ 'multiline' }    = $self->{ 'cfg' }->{ 'multiline' };
-    $args{ 'separator' }    = $self->{ 'cfg' }->{ 'separator' };
-    $args{ 'comma' }        = $self->{ 'cfg' }->{ 'comma' };
-    $args{ 'comma_break' }  = $self->{ 'cfg' }->{ 'comma-break' };
-    $args{ 'format' }       = $self->{ 'cfg' }->{ 'format' };
-    $args{ 'maxlength' }    = $self->{ 'cfg' }->{ 'maxlength' };
-    $args{ 'format_type' }  = $self->{ 'cfg' }->{ 'format-type' };
-    $args{ 'wrap_limit' }   = $self->{ 'cfg' }->{ 'wrap-limit' };
-    $args{ 'wrap_after' }   = $self->{ 'cfg' }->{ 'wrap-after' };
-    $args{ 'space' }        = $self->{ 'cfg' }->{ 'space' };
-    $args{ 'no_grouping' }  = $self->{ 'cfg' }->{ 'nogrouping' };
-    $args{ 'numbering' }    = $self->{ 'cfg' }->{ 'numbering' };
-    $args{ 'redshift' }     = $self->{ 'cfg' }->{ 'redshift' };
-    $args{ 'wrap_comment' } = $self->{ 'cfg' }->{ 'wrap-comment' };
-    $args{ 'no_extra_line' }= $self->{ 'cfg' }->{ 'no-extra-line' };
-    $args{ 'config' }       = $self->{ 'cfg' }->{ 'config' };
-    $args{ 'no_rcfile' }    = $self->{ 'cfg' }->{ 'no-rcfile' };
-    $args{ 'inplace' }      = $self->{ 'cfg' }->{ 'inplace' };
-    $args{ 'keep_newline' } = $self->{ 'cfg' }->{ 'keep-newline' };
-    $args{ 'extra_function' } = $self->{ 'cfg' }->{ 'extra-function' };
+    $args{ 'no_comments' }        = 1 if $self->{ 'cfg' }->{ 'nocomment' };
+    $args{ 'spaces' }             = $self->{ 'cfg' }->{ 'spaces' };
+    $args{ 'uc_keywords' }        = $self->{ 'cfg' }->{ 'keyword-case' };
+    $args{ 'uc_functions' }       = $self->{ 'cfg' }->{ 'function-case' };
+    $args{ 'uc_types' }           = $self->{ 'cfg' }->{ 'type-case' };
+    $args{ 'placeholder' }        = $self->{ 'cfg' }->{ 'placeholder' };
+    $args{ 'multiline' }          = $self->{ 'cfg' }->{ 'multiline' };
+    $args{ 'separator' }          = $self->{ 'cfg' }->{ 'separator' };
+    $args{ 'comma' }              = $self->{ 'cfg' }->{ 'comma' };
+    $args{ 'comma_break' }        = $self->{ 'cfg' }->{ 'comma-break' };
+    $args{ 'format' }             = $self->{ 'cfg' }->{ 'format' };
+    $args{ 'maxlength' }          = $self->{ 'cfg' }->{ 'maxlength' };
+    $args{ 'format_type' }        = $self->{ 'cfg' }->{ 'format-type' };
+    $args{ 'wrap_limit' }         = $self->{ 'cfg' }->{ 'wrap-limit' };
+    $args{ 'wrap_after' }         = $self->{ 'cfg' }->{ 'wrap-after' };
+    $args{ 'space' }              = $self->{ 'cfg' }->{ 'space' };
+    $args{ 'no_grouping' }        = $self->{ 'cfg' }->{ 'nogrouping' };
+    $args{ 'numbering' }          = $self->{ 'cfg' }->{ 'numbering' };
+    $args{ 'redshift' }           = $self->{ 'cfg' }->{ 'redshift' };
+    $args{ 'wrap_comment' }       = $self->{ 'cfg' }->{ 'wrap-comment' };
+    $args{ 'no_extra_line' }      = $self->{ 'cfg' }->{ 'no-extra-line' };
+    $args{ 'config' }             = $self->{ 'cfg' }->{ 'config' };
+    $args{ 'no_rcfile' }          = $self->{ 'cfg' }->{ 'no-rcfile' };
+    $args{ 'inplace' }            = $self->{ 'cfg' }->{ 'inplace' };
+    $args{ 'keep_newline' }       = $self->{ 'cfg' }->{ 'keep-newline' };
+    $args{ 'extra_function' }     = $self->{ 'cfg' }->{ 'extra-function' };
+    $args{ 'keep_comment_style' } = $self->{ 'cfg' }->{ 'keep-comment-style' };
 
     if ($self->{ 'query' } && ($args{ 'maxlength' } && length($self->{ 'query' }) > $args{ 'maxlength' })) {
         $self->{ 'query' } = substr($self->{ 'query' }, 0, $args{ 'maxlength' })
@@ -224,52 +225,53 @@ Arguments:
 
 Options:
 
-    -a | --anonymize      : obscure all literals in queries, useful to hide
-                            confidential data before formatting.
-    -b | --comma-start    : in a parameters list, start with the comma (see -e)
-    -B | --comma-break    : in insert statement, add a newline after each comma.
-    -c | --config FILE    : use a configuration file. Default is to not use
-                            configuration file or ~/.pg_format if it exists.
-    -C | --wrap-comment   : with --wrap-limit, apply reformatting to comments.
-    -d | --debug          : enable debug mode. Disabled by default.
-    -e | --comma-end      : in a parameters list, end with the comma (default)
-    -f | --function-case N: Change the case of the reserved keyword. Default is
-                            unchanged: 0. Values: 0=>unchanged, 1=>lowercase,
-                            2=>uppercase, 3=>capitalize.
-    -F | --format STR     : output format: text or html. Default: text.
-    -g | --nogrouping     : add a newline between statements in transaction
-                            regroupement. Default is to group statements.
-    -h | --help           : show this message and exit.
-    -i | --inplace        : override input files with formatted content.
-    -k | --keep-newline   : preserve empty line in plpgsql code.
-    -L | --no-extra-line  : do not add an extra empty line at end of the output.
-    -m | --maxlength SIZE : maximum length of a query, it will be cutted above
-                            the given size. Default: no truncate.
-    -M | --multiline      : enable multi-line search for -p or --placeholder.
-    -n | --nocomment      : remove any comment from SQL code.
-    -N | --numbering      : statement numbering as a comment before each query.
-    -o | --output file    : define the filename for the output. Default: stdout.
-    -p | --placeholder RE : set regex to find code that must not be changed.
-    -r | --redshift       : add RedShift keyworks to the list of SQL keyworks.
-    -s | --spaces size    : change space indent, default 4 spaces.
-    -S | --separator STR  : dynamic code separator, default to single quote.
-    -t | --format-type    : try another formatting type for some statements.
-    -T | --tabs           : use tabs instead of space characters, when used
-                            spaces is set to 1 whatever is the value set to -s.
-    -u | --keyword-case N : Change the case of the reserved keyword. Default is
-                            uppercase: 2. Values: 0=>unchanged, 1=>lowercase,
-                            2=>uppercase, 3=>capitalize.
-    -U | --type-case N    : Change the case of the data type name. Default is
-                            lowercase: 1. Values: 0=>unchanged, 1=>lowercase,
-                            2=>uppercase, 3=>capitalize.
-    -v | --version        : show pg_format version and exit.
-    -w | --wrap-limit N   : wrap queries at a certain length.
-    -W | --wrap-after N   : number of column after which lists must be wrapped.
-                            Default: puts every item on its own line.
-    -X | --no-rcfile      : do not read ~/.pg_format automatically. The
-                            --config / -c option overrides it.
-    --extra-function FILE : file containing a list of function to use the same
-                            formatting as PostgreSQL internal function.
+    -a | --anonymize          : obscure all literals in queries, useful to hide
+                                confidential data before formatting.
+    -b | --comma-start        : in a parameters list, start with the comma (see -e)
+    -B | --comma-break        : in insert statement, add a newline after each comma.
+    -c | --config FILE        : use a configuration file. Default is to not use
+                                configuration file or ~/.pg_format if it exists.
+    -C | --wrap-comment       : with --wrap-limit, apply reformatting to comments.
+    -d | --debug              : enable debug mode. Disabled by default.
+    -e | --comma-end          : in a parameters list, end with the comma (default)
+    -f | --function-case N    : Change the case of the reserved keyword. Default is
+                                unchanged: 0. Values: 0=>unchanged, 1=>lowercase,
+                                2=>uppercase, 3=>capitalize.
+    -F | --format STR         : output format: text or html. Default: text.
+    -g | --nogrouping         : add a newline between statements in transaction
+                                regroupement. Default is to group statements.
+    -h | --help               : show this message and exit.
+    -i | --inplace            : override input files with formatted content.
+    -k | --keep-newline       : preserve empty line in plpgsql code.
+         --keep-comment-style : Keep style of comments instead of normalizing them
+    -L | --no-extra-line      : do not add an extra empty line at end of the output.
+    -m | --maxlength SIZE     : maximum length of a query, it will be cutted above
+                                the given size. Default: no truncate.
+    -M | --multiline          : enable multi-line search for -p or --placeholder.
+    -n | --nocomment          : remove any comment from SQL code.
+    -N | --numbering          : statement numbering as a comment before each query.
+    -o | --output file        : define the filename for the output. Default: stdout.
+    -p | --placeholder RE     : set regex to find code that must not be changed.
+    -r | --redshift           : add RedShift keyworks to the list of SQL keyworks.
+    -s | --spaces size        : change space indent, default 4 spaces.
+    -S | --separator STR      : dynamic code separator, default to single quote.
+    -t | --format-type        : try another formatting type for some statements.
+    -T | --tabs               : use tabs instead of space characters, when used
+                                spaces is set to 1 whatever is the value set to -s.
+    -u | --keyword-case N     : Change the case of the reserved keyword. Default is
+                                uppercase: 2. Values: 0=>unchanged, 1=>lowercase,
+                                2=>uppercase, 3=>capitalize.
+    -U | --type-case N        : Change the case of the data type name. Default is
+                                lowercase: 1. Values: 0=>unchanged, 1=>lowercase,
+                                2=>uppercase, 3=>capitalize.
+    -v | --version            : show pg_format version and exit.
+    -w | --wrap-limit N       : wrap queries at a certain length.
+    -W | --wrap-after N       : number of column after which lists must be wrapped.
+                                Default: puts every item on its own line.
+    -X | --no-rcfile          : do not read ~/.pg_format automatically. The
+                                --config / -c option overrides it.
+    --extra-function FILE     : file containing a list of function to use the same
+                                formatting as PostgreSQL internal function.
 
 Examples:
 
@@ -333,6 +335,7 @@ sub get_command_line_args
         'help|h!',
         'function-case|f=i',
         'keep-newline|k!',
+        'keep-comment-style!',
         'no-extra-line|L!',
         'maxlength|m=i',
         'multiline|M!',
@@ -394,24 +397,25 @@ sub get_command_line_args
     }
 
     # Set default configuration
-    $cfg{ 'spaces' }        //= 4;
-    $cfg{ 'output' }        //= '-';
-    $cfg{ 'function-case' } //= 0;
-    $cfg{ 'keyword-case' }  //= 2;
-    $cfg{ 'type-case' }     //= 1;
-    $cfg{ 'comma' }         //= 'end';
-    $cfg{ 'format' }        //= 'text';
-    $cfg{ 'comma-break' }   //= 0;
-    $cfg{ 'maxlength' }     //= 0;
-    $cfg{ 'format-type' }   //= 0;
-    $cfg{ 'wrap-limit' }    //= 0;
-    $cfg{ 'wrap-after' }    //= 0;
-    $cfg{ 'wrap-comment' }  //= 0;
-    $cfg{ 'space' }         //= ' ';
-    $cfg{ 'numbering' }     //= 0;
-    $cfg{ 'redshift' }      //= 0;
-    $cfg{ 'no-extra-line' } //= 0;
-    $cfg{ 'inplace' }       //= 0;
+    $cfg{ 'spaces' }             //= 4;
+    $cfg{ 'output' }             //= '-';
+    $cfg{ 'function-case' }      //= 0;
+    $cfg{ 'keyword-case' }       //= 2;
+    $cfg{ 'type-case' }          //= 1;
+    $cfg{ 'comma' }              //= 'end';
+    $cfg{ 'format' }             //= 'text';
+    $cfg{ 'comma-break' }        //= 0;
+    $cfg{ 'maxlength' }          //= 0;
+    $cfg{ 'format-type' }        //= 0;
+    $cfg{ 'wrap-limit' }         //= 0;
+    $cfg{ 'wrap-after' }         //= 0;
+    $cfg{ 'wrap-comment' }       //= 0;
+    $cfg{ 'space' }              //= ' ';
+    $cfg{ 'numbering' }          //= 0;
+    $cfg{ 'redshift' }           //= 0;
+    $cfg{ 'no-extra-line' }      //= 0;
+    $cfg{ 'inplace' }            //= 0;
+    $cfg{ 'keep-comment-style' } //= 0;
 
     if ($cfg{ 'tabs' })
     {

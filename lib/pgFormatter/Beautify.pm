@@ -160,6 +160,8 @@ Takes options as hash. Following options are recognized:
 
 =item * keep_newline - preserve empty line in plpgsql code 
 
+=item * keep_comment_style - don't normalize different comment styles
+
 =back
 
 For defaults, please check function L<set_defaults>.
@@ -174,7 +176,7 @@ sub new
     my $self = bless {}, $class;
     $self->set_defaults();
 
-    for my $key ( qw( query spaces space break wrap keywords functions rules uc_keywords uc_functions uc_types no_comments no_grouping placeholder multiline separator comma comma_break format colorize format_type wrap_limit wrap_after wrap_comment numbering redshift no_extra_line keep_newline) ) {
+    for my $key ( qw( query spaces space break wrap keywords functions rules uc_keywords uc_functions uc_types no_comments no_grouping placeholder multiline separator comma comma_break format colorize format_type wrap_limit wrap_after wrap_comment numbering redshift no_extra_line keep_newline keep_comment_style) ) {
         $self->{ $key } = $options{ $key } if defined $options{ $key };
     }
 
@@ -3644,16 +3646,17 @@ sub set_defaults
     $self->{ 'functions' }    = ();
     push(@{ $self->{ 'functions' } }, keys %{ $self->{ 'dict' }->{ 'pg_functions' } });
     $self->_refresh_functions_re();
-    $self->{ 'separator' }     = '';
-    $self->{ 'comma' }         = 'end';
-    $self->{ 'format' }        = 'text';
-    $self->{ 'colorize' }      = 1;
-    $self->{ 'format_type' }   = 0;
-    $self->{ 'wrap_limit' }    = 0;
-    $self->{ 'wrap_after' }    = 0;
-    $self->{ 'wrap_comment' }  = 0;
-    $self->{ 'no_extra_line' } = 0;
-    $self->{ 'keep_newline' }  = 0;
+    $self->{ 'separator' }           = '';
+    $self->{ 'comma' }               = 'end';
+    $self->{ 'format' }              = 'text';
+    $self->{ 'colorize' }            = 1;
+    $self->{ 'format_type' }         = 0;
+    $self->{ 'wrap_limit' }          = 0;
+    $self->{ 'wrap_after' }          = 0;
+    $self->{ 'wrap_comment' }        = 0;
+    $self->{ 'no_extra_line' }       = 0;
+    $self->{ 'keep_newline' }        = 0;
+    $self->{ 'keep_comment_style' }  = 0;
 
     return;
 }
@@ -4322,9 +4325,11 @@ sub _remove_comments
         	($lines[$j] =~ s/(\s*\# .*)$/PGF_COMMENT${idx}A/) )
 	{
             $self->{'comments'}{"PGF_COMMENT${idx}A"} = $1;
-            # Normalize start of comment
-            $self->{'comments'}{"PGF_COMMENT${idx}A"} =~ s/^(\s*)COMMENT/$1\-\- /;
-            $self->{'comments'}{"PGF_COMMENT${idx}A"} =~ s/^(\s*)\#/$1\-\- /;
+            if (!$self->{ 'keep_comment_style' }) {
+                # Normalize start of if requested
+                $self->{'comments'}{"PGF_COMMENT${idx}A"} =~ s/^(\s*)COMMENT/$1\-\- /;
+                $self->{'comments'}{"PGF_COMMENT${idx}A"} =~ s/^(\s*)\#/$1\-\- /;
+            }
             $idx++;
         }
     }
